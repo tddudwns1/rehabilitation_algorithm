@@ -6,19 +6,23 @@ class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int n = Integer.parseInt(br.readLine());
 
-        char[][] edge = new char[n][n];
-        char[][] canGo = new char[n][n];
+        int[][] canGo = new int[n][n];
 
         for (int i = 0; i < n; i++) {
             StringTokenizer st = new StringTokenizer(br.readLine());
             for (int j = 0; j < n; j++) {
-                edge[i][j] = st.nextToken().charAt(0);
-                canGo[i][j] = '0';
+                canGo[i][j] = Integer.parseInt(st.nextToken());
             }
         }
 
-        for (int i = 0; i < n; i++) {
-            process(i, i, n, edge, canGo, new boolean[n]);
+        for (int k = 0; k < n; k++) {
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    if (canGo[i][k] == 1 && canGo[k][j] == 1) {
+                        canGo[i][j] = 1;
+                    }
+                }
+            }
         }
 
         StringBuilder sb = new StringBuilder();
@@ -29,17 +33,5 @@ class Main {
         }
 
         System.out.println(sb);
-    }
-
-    private static void process(int now, int start, int n, char[][] edge, char[][] canGo, boolean[] visited) {
-        if (visited[now]) return;
-        visited[now] = true;
-
-        for (int i = 0; i < n; i++) {
-            if (edge[now][i] == '1' && canGo[start][i] == '0') {
-                canGo[start][i] = '1';
-                process(i, start, n, edge, canGo, visited);
-            }
-        }
     }
 }
