@@ -1,0 +1,8 @@
+작성 전(사고 흐름)
+집계함수네
+sum쓰겠네
+아 count네
+
+작성 1 (7초 컷) 제출 -> 성공
+SELECT count(*) as count
+from animal_ins
