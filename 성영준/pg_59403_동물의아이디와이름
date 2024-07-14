@@ -1,0 +1,7 @@
+작성 전(사고 흐름)
+개쉽노ㅋㅋ
+
+작성 1 (20초 컷) 제출 -> 성공
+SELECT animal_id as animal_id, name as name
+from animal_ins
+order by animal_id
