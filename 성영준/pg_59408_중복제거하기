@@ -1,0 +1,43 @@
+작성 전(사고 흐름)
+distinct랑 is not null이네
+
+작성 1(위에꺼 그대로 진행함) 제출 -> 실패
+SELECT distinct count(*) as count
+from animal_ins i
+where name is not null
+*이 아닌가?
+
+작성 2(*을 의심함) 제출 -> 실패
+SELECT distinct count(name) as count
+from animal_ins i
+where name is not null
+count가 null은 알아서 제거해주나??
+
+작성 3(count 효능을 알아보기로 함) 제출 -> 실패
+SELECT distinct count(name) as count
+from animal_ins i
+아니네
+
+작성 4(group by에 sum인가?)
+SELECT sum(name) as count
+from animal_ins i
+where name is not null
+group by name
+
+숫자 하나가 나오는게 아니고 이름마다 1 1 1 1 1 나옴 ㅠㅠ
+distinct가 되는 기준이 없어서 그런가?
+
+작성 5(서브쿼리? 만들어 보기러 함) 제출 -> 성공
+SELECT count(i.name) as count
+from (
+select distinct name
+from animal_ins
+) i
+where i.name is not null
+이 과정에서 서브쿼리? 테이블에 alias 안해주니 에러가 났음
+
+작성 6(gpt 답변) 제출 -> 성공
+SELECT COUNT(DISTINCT NAME) AS count
+FROM ANIMAL_INS
+WHERE NAME IS NOT NULL;
+count 내부에도 가능했네 ㅠㅠ 이게 정답이네
