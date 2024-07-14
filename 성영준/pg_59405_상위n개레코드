@@ -1,0 +1,8 @@
+작성 전(사고 흐름)
+easy
+
+작성 1 (15초 컷) 제출 -> 성공
+SELECT name as name
+from animal_ins
+order by datetime
+limit 1;
