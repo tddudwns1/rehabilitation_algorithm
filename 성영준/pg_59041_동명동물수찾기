@@ -1,0 +1,54 @@
+작성 1 (뇌정지)
+SELECT name as name, count
+from animal_ins
+
+작성 2 (카운팅 관련 인터넷 검색 후)
+SELECT name as name, count(name) as count
+from animal_ins
+group by name
+
+모든 데이터가 1로 나옴
+
+작성 3 (생각 후) 제출 -> 틀림
+SELECT name as name, count(name) as count
+from animal_ins
+group by name
+order by count(name) desc
+limit 2;
+
+아마 이름이 없는 애들도 카운팅 되서 그런 듯
+
+작성 4 (생각 후) 제출 -> 틀림
+SELECT name as name, count(name) as count
+from animal_ins
+where name is not null
+group by name
+order by count(name) desc
+limit 2;
+
+정렬 기준도 틀리고
+나와야 하는 데이터가 2개 이상 쓰여야 함
+
+작성 5 (select문에 조건 관련 인터넷 검색 후)
+
+작성 6 (집계 함수에 조건 관련 인터넷 검색 후)
+
+작성 7 (having문 관련 인터넷 검색 후) 제출 -> 틀림
+SELECT name as name, count(name) as count
+from animal_ins
+where name is not null
+group by name
+having count(name) > 1
+order by name
+limit 2;
+
+이제 보니까 2개만 뽑으라는 조건이 없었음
+2는 2번 이상 사용된 이름을 출력하라는 거였음
+
+작성 8 (문제를 드디어 정독함) 제출 -> 맞음
+SELECT name as name, count(name) as count
+from animal_ins
+where name is not null
+group by name
+having count(name) > 1
+order by name;
