@@ -99,3 +99,19 @@ A.
     따라서, 서브쿼리에서 미리 필터링한 후에 조인을 수행하는 전략이
     성능 면에서 더 유리할 수 있습니다,
     특히 조인할 행의 수가 큰 경우에 더욱 그렇습니다.
+
+-- 작성 2(최종) 제출 -> 성공
+-
+SELECT
+    b.book_id as book_id,
+    a.author_name as author_name,
+    date_format(b.published_date, "%Y-%m-%d") as published_date
+from
+    author a
+    join (
+        select *
+        from book b
+        where b.category = '경제'
+    ) b using (AUTHOR_ID)
+order by
+    b.published_date
