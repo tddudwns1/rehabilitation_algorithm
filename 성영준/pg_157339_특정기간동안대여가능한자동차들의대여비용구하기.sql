@@ -180,3 +180,40 @@ ORDER BY
 위의 LEFT JOIN과 IS NULL을 사용하는 쿼리는 일반적으로 가장 빠른 성능을 제공할 가능성이 큽니다. 데이터베이스 엔진이 최적화하기 쉬운 구조이며, 인덱스를 잘 활용할 수 있기 때문입니다. 따라서, 복잡한 RIGHT JOIN과 NOT EXISTS 방식보다 이 방식이 대부분의 상황에서 더 빠르고 효율적일 가능성이 높습니다.
 
 이건 나중에 다시 풀어봐야겠다
+
+-- 다음날 복습 제출 -> 성공
+select distinct
+    c.CAR_ID,
+    c.CAR_TYPE,
+    round(c.DAILY_FEE * 30 * (100 - d.DISCOUNT_RATE) / 100, 0) as FEE
+from
+    CAR_RENTAL_COMPANY_CAR c
+        join
+    CAR_RENTAL_COMPANY_DISCOUNT_PLAN d
+    on c.CAR_TYPE = d.CAR_TYPE
+        and DURATION_TYPE = "30일 이상"
+        and c.CAR_TYPE in('세단', 'SUV')
+        left join
+    CAR_RENTAL_COMPANY_RENTAL_HISTORY r
+    on c.CAR_ID = r.CAR_ID
+        and r.start_date <= '2022-11-30' AND r.end_date >= '2022-11-01'
+where
+    r.CAR_ID is null
+  and round(c.DAILY_FEE * 30 * (100 - d.DISCOUNT_RATE) / 100, 0) between 500000 and 2000000
+order by
+    FEE desc,
+    CAR_TYPE,
+    CAR_ID desc
+
+1. 조건을 where 절에 거냐 join 절에 거냐
+    어떤 조건을 JOIN 절에 넣느냐, WHERE 절에 넣느냐에 따라 결과가 달라질 수 있습니다. 하지만, LEFT JOIN에서 조건을 WHERE 절에 넣으면 그 조건이 필터링된 후 결과에서 제외될 수 있으므로, 이 점을 유념하여 쿼리를 작성해야 합니다.
+    성능 측면: 성능 차이는 대부분의 경우 거의 없으며, 데이터베이스 엔진이 동일한 실행 계획을 생성할 가능성이 큽니다.
+    가독성 측면: 필터링 조건이 WHERE 절에 모여 있어 필터링 로직을 쉽게 이해할 수 있습니다.-
+2. select 절과 where 절에 같은 계산식을 쓰면 안 느린가?
+    대부분의 현대적인 데이터베이스 엔진은 동일한 계산식이 SELECT 절과 WHERE 절에 동시에 존재할 경우, 자동으로 이를 최적화하여 중복 계산을 피합니다.
+3. using 과 on 은 차이가 있나?
+    USING과 ON 절의 사용 여부는 성능보다는 주로 가독성과 코드의 간결성에 영향을 미칩니다. 성능 최적화를 위해서는 조인에 사용되는 열에 적절한 인덱스를 설정하고, 쿼리 구조를 효율적으로 설계하는 것이 중요합니다.
+    따라서, USING 절을 사용하면 코드가 더 깔끔해질 수 있지만, 시간적인 이득은 거의 없다고 볼 수 있습니다.
+
+    using 을 사용하면 뒤에 and 조건이 되나?
+    됩니다.
