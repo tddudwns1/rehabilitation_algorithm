@@ -26,6 +26,8 @@ public class boj_10653_마라톤2 {
         int n = Integer.parseInt(st.nextToken());
         // 건너 뛸 코스 수
         int k = Integer.parseInt(st.nextToken());
+        if (k == n - 1)
+            k--;
 
         // 코스 좌표 정보
         CheckPoint[] checkPoint = new CheckPoint[n];
@@ -64,16 +66,10 @@ public class boj_10653_마라톤2 {
                             + getManhattanDistance(checkPoint[beforePoint], checkPoint[point]));
                 }
             }
-
         }
 
         // 정답 출력
-        // 마지막 코스는 반드시 방문해야 하기 때문에 따로 측정
-        int min = Integer.MAX_VALUE;
-        for (int skip = 0; skip <= k; skip++) {
-            min = Math.min(infos[skip][n - 1], min);
-        }
-        System.out.println(min);
+        System.out.println(infos[k][n - 1]);
     }
 
     private static int getManhattanDistance(CheckPoint checkPoint1, CheckPoint checkPoint2) {
