@@ -26,7 +26,7 @@ public class boj_1446_지름길 {
         int n = Integer.parseInt(st.nextToken()); // 길 수
         int d = Integer.parseInt(st.nextToken()); // 도착지
 
-        Map<Integer, List<Info>> map = new HashMap<>();
+        Map<Integer, Map<Integer, Integer>> map = new HashMap<>();
         TreeSet<Integer> spots = new TreeSet<>();
         spots.add(0);
         spots.add(d);
@@ -43,25 +43,35 @@ public class boj_1446_지름길 {
             spots.add(s);
             spots.add(e);
 
-            List<Info> pq = map.getOrDefault(s, new ArrayList<>());
-            pq.add(new Info(e, l));
-            map.put(s, pq);
+            Map<Integer, Integer> spot = map.getOrDefault(s, new HashMap<>());
+
+            if (spot.containsKey(e) && spot.get(e) <= l)
+                continue;
+
+            spot.put(e, l);
+            map.put(s, spot);
         }
 
         int prev = spots.pollFirst();
         while (!spots.isEmpty()) {
             int next = spots.pollFirst();
 
-            List<Info> pq = map.getOrDefault(prev, new ArrayList<>());
-            pq.add(new Info(next, next - prev));
-            map.put(prev, pq);
+            int commonLength = next - prev;
+
+            Map<Integer, Integer> spot = map.getOrDefault(prev, new HashMap<>());
+
+            if (!spot.containsKey(next) || spot.get(next) > commonLength) {
+                spot.put(next, commonLength);
+                map.put(prev, spot);
+            }
+
             prev = next;
         }
 
         System.out.println(process(d, map));
     }
 
-    private static int process(int d, Map<Integer, List<Info>> map) {
+    private static int process(int d, Map<Integer, Map<Integer, Integer>> map) {
         Queue<Info> pq = new PriorityQueue<>();
         pq.add(new Info(0, 0));
 
@@ -71,8 +81,10 @@ public class boj_1446_지름길 {
             if (now.destination == d)
                 return now.cost;
 
-            for (Info next : map.get(now.destination)) {
-                pq.add(new Info(next.destination, next.cost + now.cost));
+            Map<Integer, Integer> nextMap = map.get(now.destination);
+            Set<Integer> keySet = nextMap.keySet();
+            for (int next : keySet) {
+                pq.add(new Info(next, nextMap.get(next) + now.cost));
             }
         }
     }
